@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Portions copyright (c) 2014-18 Richard Hull and contributors
-# PYTHON_ARGCOMPLETE_OK
 import os
 import sys
 import time
@@ -12,9 +10,6 @@ from luma.core.render import canvas
 from luma.oled.device import ssd1306
 
 API_ENDPOINT = "http://weather.shelms.io/api/"
-
-if os.name != 'posix':
-    sys.exit('{} platform not supported'.format(os.name))
 
 from PIL import ImageFont
 
@@ -117,11 +112,19 @@ def main():
     oled_device.cleanup = do_nothing
 
     while True:
+	# Update our LED
         stats(oled_device)
-        time.sleep(5)
+
+	# Every 5 minutes post up to our production site.
+	# Feel free to change this or eliminate this during testing.
         if (time_counter % 300 == 0):
             report()
+
+	# Increment a counter (1 per second. 5 here since we sleep 5 below)
         time_counter += 5
+
+	# Sleep 5 seconds
+        time.sleep(5)
 
 
 if __name__ == "__main__":
